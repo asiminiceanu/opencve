@@ -64,13 +64,18 @@ class Vendor(BaseModel):
 
 
 class Product(BaseModel):
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256)
     vendor = models.ForeignKey(
         Vendor, on_delete=models.CASCADE, related_name="products"
     )
 
     class Meta:
         db_table = "opencve_products"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "vendor_id"], name="ix_unique_products"
+            )
+        ]
 
     @property
     def human_name(self):

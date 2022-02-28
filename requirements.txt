@@ -7,3 +7,4 @@ requests==2.27.1
 untangle==1.1.1
 arrow==1.2.2
 nested_lookup==0.2.23
+cpe==1.2.1
