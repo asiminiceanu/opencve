@@ -2,8 +2,9 @@ import itertools
 import json
 import operator
 
-from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView, TemplateView
 
 from core.constants import PRODUCT_SEPARATOR
@@ -21,6 +22,30 @@ class CweListView(ListView):
     context_object_name = "cwes"
     template_name = "core/cwe_list.html"
     paginate_by = 20
+
+
+class VendorListView(ListView):
+    queryset = Vendor.objects.order_by("name")
+    context_object_name = "vendors"
+    template_name = "core/vendor_list.html"
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get all products or filter them by vendor
+        vendor = self.request.GET.get("vendor")
+        if vendor:
+            products = Product.objects.filter(vendor__name=vendor).all()
+        else:
+            products = Product.objects.all()
+
+        # Add the pagination
+        paginator = Paginator(products, 20)
+        page_number = self.request.GET.get('product_page')
+        context["products"] = paginator.get_page(page_number)
+
+        return context
 
 
 class CveListView(ListView):
