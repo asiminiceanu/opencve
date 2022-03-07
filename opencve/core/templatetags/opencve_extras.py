@@ -1,4 +1,5 @@
 import hashlib
+from re import L
 
 from django import template
 from django.conf import settings
@@ -173,3 +174,17 @@ def get_conf_children(conf):
     if conf["operator"] == "AND":
         return conf["children"]
     return [conf]
+
+
+@register.simple_tag(takes_context=True)
+def query_params_url(context, *args):
+    query_params = dict(context["request"].GET)
+    for key, value in query_params.items():
+        if isinstance(value, list):
+            query_params[key] = value[0]
+
+    # Update query values with new ones provided in the tag
+    grouped_params = {args[i]: args[i + 1] for i in range(0, len(args), 2)}
+    query_params.update(grouped_params)
+
+    return urlencode(query_params)

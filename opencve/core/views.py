@@ -25,25 +25,36 @@ class CweListView(ListView):
 
 
 class VendorListView(ListView):
-    queryset = Vendor.objects.order_by("name")
     context_object_name = "vendors"
     template_name = "core/vendor_list.html"
     paginate_by = 20
+
+    def get_queryset(self):
+        vendors = Vendor.objects.order_by("name").prefetch_related("products")
+        if self.request.GET.get("search"):
+            vendors = vendors.filter(name__contains=self.request.GET.get("search"))
+        return vendors
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # Get all products or filter them by vendor
         vendor = self.request.GET.get("vendor")
+        products = Product.objects.order_by("name").select_related("vendor")
+
+        # Filter by vendor
         if vendor:
-            products = Product.objects.filter(vendor__name=vendor).all()
-        else:
-            products = Product.objects.all()
+            products = products.filter(vendor__name=vendor)
+
+        # Filter by keyword
+        if self.request.GET.get("search"):
+            products = products.filter(name__contains=self.request.GET.get("search"))
 
         # Add the pagination
         paginator = Paginator(products, 20)
-        page_number = self.request.GET.get('product_page')
+        page_number = self.request.GET.get("product_page")
         context["products"] = paginator.get_page(page_number)
+        context["paginator_products"] = paginator
 
         return context
 

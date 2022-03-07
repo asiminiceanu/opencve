@@ -57,7 +57,7 @@ Vulnerabilities (CVE)
                         {% endif %}
                     </div>
                     <div class="box-tools pull-right">
-                        <a type="button" class="btn btn-box-tool" data-toggle="remove" href="#"><i class="fa fa-times"></i></a>
+                        <a type="button" class="btn btn-box-tool" data-toggle="remove" href="{% url 'cves' %}"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@ Vulnerabilities (CVE)
                         {% endif %}
                     </div>
                     <div class="box-tools pull-right">
-                        <a type="button" class="btn btn-box-tool" data-toggle="remove" href="#"><i class="fa fa-times"></i></a>
+                        <a type="button" class="btn btn-box-tool" data-toggle="remove" href="{% url 'cves' %}?vendor={{ vendor.name }}"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
             </div>
@@ -197,8 +197,8 @@ Vulnerabilities (CVE)
                         <div class="pagination">
                             <span class="step-links">
                                 {% if page_obj.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                    <a href="{% url 'cves'%}?{% query_params_url 'page' 1 %}">&laquo; first</a>
+                                    <a href="{% url 'cves'%}?{% query_params_url 'page' page_obj.previous_page_number %}">previous</a>
                                 {% endif %}
 
                                 <span class="current">
@@ -206,8 +206,8 @@ Vulnerabilities (CVE)
                                 </span>
 
                                 {% if page_obj.has_next %}
-                                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                                    <a href="{% url 'cves'%}?{% query_params_url 'page' page_obj.next_page_number %}">next</a>
+                                    <a href="{% url 'cves'%}?{% query_params_url 'page' page_obj.paginator.num_pages %}">last &raquo;</a>
                                 {% endif %}
                             </span>
                         </div>
