@@ -46,7 +46,7 @@ class Cwe(BaseModel):
         return self.cwe_id.split("CWE-")[1]
 
     def __str__(self):
-        return "<Cwe {}>".format(self.cwe_id)
+        return self.cwe_id
 
 
 class Vendor(BaseModel):
@@ -60,7 +60,7 @@ class Vendor(BaseModel):
         return humanize(self.name)
 
     def __str__(self):
-        return "<Vendor {}>".format(self.name)
+        return self.name
 
 
 class Product(BaseModel):
@@ -82,7 +82,7 @@ class Product(BaseModel):
         return humanize(self.name)
 
     def __str__(self):
-        return "<Product {}>".format(self.name)
+        return self.name
 
 
 class Cve(BaseModel):
@@ -131,4 +131,4 @@ class Cve(BaseModel):
         return w
 
     def __str__(self):
-        return "<CVE {}>".format(self.cve_id)
+        return self.cve_id
