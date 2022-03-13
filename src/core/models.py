@@ -88,9 +88,6 @@ class Product(BaseModel):
 class Cve(BaseModel):
     # TODO: check if updated_at needs to be indexed
     cve_id = models.CharField(max_length=20, unique=True)
-
-    # Use JSON fields to enhance performance (integrity is handled
-    # by the code itself)
     json = models.JSONField()
     vendors = models.JSONField()
     cwes = models.JSONField()

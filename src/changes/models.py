@@ -1,14 +1,22 @@
+import hashlib
+import uuid
+
 from django.db import models
 
 from core.models import BaseModel, Cve
 
+def get_random_sha256():
+    return hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
+
 
 class Task(BaseModel):
+    nvd_checksum = models.CharField(max_length=64, unique=True, default=get_random_sha256)
+
     class Meta:
         db_table = "opencve_tasks"
 
     def __str__(self):
-        return "<Task {}>".format(self.created_at)
+        return self.nvd_checksum
 
 
 class Change(BaseModel):
@@ -48,4 +56,4 @@ class Event(BaseModel):
         db_table = "opencve_events"
 
     def __str__(self):
-        return "<Event {}>".format(self.type)
+        return self.type

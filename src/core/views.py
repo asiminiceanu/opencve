@@ -18,10 +18,15 @@ class HomeView(TemplateView):
 
 
 class CweListView(ListView):
-    queryset = Cwe.objects.order_by("-name")
     context_object_name = "cwes"
     template_name = "core/cwe_list.html"
     paginate_by = 20
+
+    def get_queryset(self):
+        query = Cwe.objects
+        if self.request.GET.get("search"):
+            query = query.filter(name__icontains=self.request.GET.get("search"))
+        return query.order_by("-name")
 
 
 class VendorListView(ListView):
