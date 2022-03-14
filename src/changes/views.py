@@ -1,6 +1,7 @@
 from audioop import reverse
 import json
 
+from django.db.models import F
 from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
@@ -23,6 +24,7 @@ class ChangeListView(ListView):
     def get_queryset(self):
         query = Change.objects
         query = query.select_related("cve").prefetch_related("events")
+        #query = query.filter(cve__vendors__contains="redhat")
         # TODO: check user settings (all activities or subscriptions ones)
         return query.order_by("-created_at")[:20]
 

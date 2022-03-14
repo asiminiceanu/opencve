@@ -23,9 +23,11 @@
             <ul class="timeline">
                 {% for change in changes %}
                 <li class="time-label">
+                    {% ifchanged change.created_at|date:"d b Y" %}
                     <span class="bg-blue bg-opencve">
                         {{ change.created_at|date:"d b Y" }}
                     </span>
+                    {% endifchanged %}
                 </li>
 
                 <li>
@@ -101,6 +103,18 @@
 
             </ul>
             {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <div class="box-title">Dashboard Options</div>
+                </div>
+                <div class="box-body">
+
+                </div>
+            </div>
+        </div>
         </div>
     </div>
 </section>
