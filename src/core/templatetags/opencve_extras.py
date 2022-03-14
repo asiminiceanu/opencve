@@ -1,5 +1,4 @@
 import hashlib
-from re import L
 
 from django import template
 from django.conf import settings
@@ -188,3 +187,22 @@ def query_params_url(context, *args):
     query_params.update(grouped_params)
 
     return urlencode(query_params)
+
+
+@register.filter
+def remove_product_separator(s):
+    return s.replace(PRODUCT_SEPARATOR, " ")
+
+@register.filter
+def event_excerpt(details):
+    if isinstance(details, list):
+        return f"<strong>{len(details)}</strong> added"
+    else:
+        output = []
+        if "changed" in details:
+            output.append(f"<strong>{len(details['changed'])}</strong> changed")
+        if "added" in details:
+            output.append(f"<strong>{len(details['added'])}</strong> added")
+        if "removed" in details:
+            output.append(f"<strong>{len(details['removed'])}</strong> removed")
+        return ", ".join(output)

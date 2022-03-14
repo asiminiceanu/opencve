@@ -24,10 +24,13 @@ class Change(BaseModel):
 
     # Relationships
     cve = models.ForeignKey(Cve, on_delete=models.CASCADE, related_name="changes")
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="tasks")
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="changes")
 
     class Meta:
         db_table = "opencve_changes"
+    
+    def is_new_cve(self):
+        return self.events.count() == 1 and self.events.first().type == "new_cve"
 
 
 class Event(BaseModel):
