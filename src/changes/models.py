@@ -5,12 +5,15 @@ from django.db import models
 
 from core.models import BaseModel, Cve
 
+
 def get_random_sha256():
     return hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
 
 
 class Task(BaseModel):
-    nvd_checksum = models.CharField(max_length=64, unique=True, default=get_random_sha256)
+    nvd_checksum = models.CharField(
+        max_length=64, unique=True, default=get_random_sha256
+    )
 
     class Meta:
         db_table = "opencve_tasks"
@@ -28,9 +31,6 @@ class Change(BaseModel):
 
     class Meta:
         db_table = "opencve_changes"
-    
-    def is_new_cve(self):
-        return self.events.count() == 1 and self.events.first().type == "new_cve"
 
 
 class Event(BaseModel):

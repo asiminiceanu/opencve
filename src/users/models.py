@@ -1,6 +1,7 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
+
+from core.models import BaseModel, Product, Vendor
 
 
 def get_default_filters():
@@ -22,7 +23,7 @@ def get_default_settings():
     return {"activities_view": "all"}
 
 
-class User(AbstractUser):
+class User(BaseModel, AbstractUser):
     class Meta:
         db_table = "opencve_users"
 
@@ -38,3 +39,9 @@ class User(AbstractUser):
         choices=FrequencyNotification.choices,
         default=FrequencyNotification.ALWAYS,
     )
+
+    vendors = models.ManyToManyField(Vendor)
+    products = models.ManyToManyField(Product)
+
+    def __str__(self):
+        return self.username

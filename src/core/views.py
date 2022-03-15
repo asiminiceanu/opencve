@@ -55,6 +55,11 @@ class VendorListView(ListView):
         if self.request.GET.get("search"):
             products = products.filter(name__contains=self.request.GET.get("search"))
 
+        # List the user subscriptions
+        if self.request.user.is_authenticated:
+            context["user_vendors"] = self.request.user.vendors.all()
+            context["user_products"] = self.request.user.products.all()
+
         # Add the pagination
         paginator = Paginator(products, 20)
         page_number = self.request.GET.get("product_page")

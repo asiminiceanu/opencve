@@ -54,7 +54,7 @@ class ChangeAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
 
     def events_count(self, obj):
         return obj.events_count
-    
+
     def events_type(self, obj):
         events = obj.events.all()
         return [e for e in events]
@@ -63,7 +63,9 @@ class ChangeAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
         queryset = super(ChangeAdmin, self).get_queryset(request)
         if request.GET.get("task"):
             queryset = queryset.filter(task_id=request.GET.get("task"))
-        return queryset.prefetch_related("events").annotate(events_count=Count("events"))
+        return queryset.prefetch_related("events").annotate(
+            events_count=Count("events")
+        )
 
     def get_changelist(self, request, **kwargs):
         return ChangeChangeList

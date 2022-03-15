@@ -109,7 +109,6 @@ class CveUtil(object):
         return cve
 
 
-
 class CustomHtmlHTML(HtmlDiff):
     def __init__(self, *args, **kwargs):
         self._table_template = """

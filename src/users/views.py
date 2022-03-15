@@ -1,13 +1,16 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.views import (
     LoginView,
     PasswordResetConfirmView,
     PasswordResetView,
 )
+from django.http import JsonResponse, Http404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 
+from core.models import Product, Vendor
 from users.forms import LoginForm, PasswordResetForm, RegisterForm, SetPasswordForm
+from users.utils import is_valid_uuid
 
 
 class CustomLoginView(LoginView):
@@ -58,3 +61,47 @@ def register(request):
     return render(
         request=request, template_name="users/register.html", context={"form": form}
     )
+
+
+def subscriptions(request):
+    response = {}
+
+    # Only authenticated users can subscribe
+    if not request.method == "POST" or not request.user.is_authenticated:
+        raise Http404()
+
+    # Handle the parameters
+    action = request.POST.get("action")
+    obj = request.POST.get("obj")
+    obj_id = request.POST.get("id")
+
+    if (
+        not all([action, obj, obj_id])
+        or not is_valid_uuid(obj_id)
+        or action not in ["subscribe", "unsubscribe"]
+        or obj not in ["vendor", "product"]
+    ):
+        raise Http404()
+
+    # Vendor subscription
+    if obj == "vendor":
+        print(obj_id)
+        vendor = get_object_or_404(Vendor, id=obj_id)
+        if action == "subscribe":
+            request.user.vendors.add(vendor)
+            response = {"status": "ok", "message": "vendor added"}
+        else:
+            request.user.vendors.remove(vendor)
+            response = {"status": "ok", "message": "vendor removed"}
+
+    # Product subscription
+    if obj == "product":
+        product = get_object_or_404(Product, id=obj_id)
+        if action == "subscribe":
+            request.user.products.add(product)
+            response = {"status": "ok", "message": "product added"}
+        else:
+            request.user.products.remove(product)
+            response = {"status": "ok", "message": "product removed"}
+
+    return JsonResponse(response)

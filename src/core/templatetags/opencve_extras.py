@@ -193,6 +193,7 @@ def query_params_url(context, *args):
 def remove_product_separator(s):
     return s.replace(PRODUCT_SEPARATOR, " ")
 
+
 @register.filter
 def event_excerpt(details):
     if isinstance(details, list):
@@ -206,3 +207,8 @@ def event_excerpt(details):
         if "removed" in details:
             output.append(f"<strong>{len(details['removed'])}</strong> removed")
         return ", ".join(output)
+
+
+@register.filter
+def is_new_cve(events):
+    return len(events) == 1 and events[0].type == "new_cve"

@@ -20,7 +20,7 @@ class BaseReadOnlyAdminMixin:
 
 @admin.register(Cve)
 class CveAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
-    search_fields = ['cve_id', 'summary']
+    search_fields = ["cve_id", "summary"]
     list_display = (
         "cve_id",
         "summary",
@@ -53,7 +53,7 @@ class CveAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
 
 @admin.register(Cwe)
 class CweAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
-    search_fields = ['cwe_id', 'name', 'description']
+    search_fields = ["cwe_id", "name", "description"]
     list_display = (
         "cwe_id",
         "name",
@@ -70,12 +70,8 @@ class CweAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
 @admin.register(Vendor)
 class VendorAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
     ordering = ("name",)
-    search_fields = ['name']
-    list_display = (
-        "name",
-        "human_name",
-        "created_at"
-    )
+    search_fields = ["name"]
+    list_display = ("name", "human_name", "created_at")
     fields = (
         "name",
         "human_name",
@@ -87,12 +83,8 @@ class VendorAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(BaseReadOnlyAdminMixin, admin.ModelAdmin):
     ordering = ("name",)
-    search_fields = ['name']
-    list_display = (
-        "human_name",
-        "get_vendor_name",
-        "created_at"
-    )
+    search_fields = ["name"]
+    list_display = ("human_name", "get_vendor_name", "created_at")
     fields = (
         "name",
         "human_name",

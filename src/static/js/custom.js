@@ -82,7 +82,7 @@ function getContrastedColor(str){
         var id = $(button).attr('id').split('_')[2];
 
         $.ajax({
-            url: '/subscriptions',
+            url: SUBSCRIPTION_URL,
             data: { 'action': action, 'obj': obj, "id": id },
             dataType: 'json',
             type: 'POST',
