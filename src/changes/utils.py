@@ -1,13 +1,12 @@
 import logging
+from difflib import HtmlDiff
 
 import arrow
-from difflib import HtmlDiff
 from nested_lookup import nested_lookup
 
 from changes.models import Change, Event
 from core.models import Cve, Cwe, Product, Vendor
-from core.utils import convert_cpes, get_cwes, flatten_vendors
-
+from core.utils import convert_cpes, flatten_vendors, get_cwes
 
 logger = logging.getLogger(__name__)
 

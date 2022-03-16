@@ -1,4 +1,3 @@
-from ast import arg
 import hashlib
 
 from django import template
@@ -9,7 +8,6 @@ from django.utils.safestring import mark_safe
 
 from core.constants import PRODUCT_SEPARATOR
 from core.utils import humanize as _humanize
-
 
 register = template.Library()
 

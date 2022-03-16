@@ -4,7 +4,6 @@ from changes.checks.base import BaseCheck
 from changes.utils import CveUtil
 from core.models import Cwe
 
-
 logger = logging.getLogger(__name__)
 
 

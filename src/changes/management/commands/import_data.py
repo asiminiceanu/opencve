@@ -10,8 +10,8 @@ import requests
 import untangle
 from cpe import CPE
 
-from changes.models import Change, Event, Task
 from changes.management.commands import BaseCommand
+from changes.models import Change, Event, Task
 from core.models import Cve, Cwe, Product, Vendor
 from core.utils import convert_cpes, flatten_vendors, get_cwes
 

@@ -7,11 +7,10 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
-from core.constants import PRODUCT_SEPARATOR
-from core.models import Cve, Cwe, Vendor, Product
-from core.utils import convert_cpes, get_cwes_details
 from changes.models import Event
-
+from core.constants import PRODUCT_SEPARATOR
+from core.models import Cve, Cwe, Product, Vendor
+from core.utils import convert_cpes, get_cwes_details
 
 
 class CweListView(ListView):

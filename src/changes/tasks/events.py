@@ -5,14 +5,13 @@ from io import BytesIO
 
 import arrow
 import requests
-from celery.utils.log import get_task_logger
 from celery import shared_task
+from celery.utils.log import get_task_logger
 
 from changes.checks.base import BaseCheck
-from changes.utils import CveUtil
 from changes.models import Task
+from changes.utils import CveUtil
 from core.models import Cve
-
 
 NVD_MODIFIED_URL = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-modified.json.gz"
 NVD_MODIFIED_META_URL = (

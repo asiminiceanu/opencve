@@ -1,20 +1,15 @@
-from itertools import product
 import json
 
-from django.utils.functional import cached_property
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import redirect
+from django.utils.functional import cached_property
 from django.views.generic import DetailView, ListView
-from django.core.paginator import Paginator
 
 from changes.forms import ActivitiesViewForm
 from changes.models import Change
 from changes.utils import CustomHtmlHTML
 from core.constants import PRODUCT_SEPARATOR
-from users.models import User
-
-from django.core.paginator import Paginator
-from django.utils.functional import cached_property
 
 
 class ActivityPaginator(Paginator):

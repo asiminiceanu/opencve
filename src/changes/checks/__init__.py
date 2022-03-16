@@ -1,4 +1,3 @@
-from re import I
 from changes.checks.cpes import Cpes
 from changes.checks.cvss import Cvss
 from changes.checks.cwes import Cwes

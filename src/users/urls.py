@@ -1,13 +1,9 @@
 from django.contrib.auth import views
 from django.urls import include, path
 
-from users.views import (
-    CustomPasswordResetConfirmView,
-    CustomPasswordResetView,
-    SubscriptionsView,
-    account,
-    subscribe,
-)
+from users.views import (CustomPasswordResetConfirmView,
+                         CustomPasswordResetView, SubscriptionsView, account,
+                         subscribe)
 
 urlpatterns = [
     path("", account, name="account"),

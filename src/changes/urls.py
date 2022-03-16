@@ -2,7 +2,6 @@ from django.urls import path
 
 from changes.views import ChangeDetailView, ChangeListView
 
-
 urlpatterns = [
     path("", ChangeListView.as_view(), name="home"),
     path(

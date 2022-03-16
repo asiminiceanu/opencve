@@ -1,9 +1,10 @@
 import imp
 from multiprocessing.spawn import old_main_modules
 from re import I
+
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import F
-from django.contrib.auth.models import AbstractUser
 
 from core.models import BaseModel, Product, Vendor
 
