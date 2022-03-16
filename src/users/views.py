@@ -1,14 +1,16 @@
 from django.contrib import messages
-from django.contrib.auth.views import (LoginView, PasswordResetConfirmView,
-                                       PasswordResetView)
+from django.contrib.auth.views import (
+    LoginView,
+    PasswordResetConfirmView,
+    PasswordResetView,
+)
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 from core.models import Product, Vendor
-from users.forms import (LoginForm, PasswordResetForm, RegisterForm,
-                         SetPasswordForm)
+from users.forms import LoginForm, PasswordResetForm, RegisterForm, SetPasswordForm
 from users.utils import is_valid_uuid
 
 

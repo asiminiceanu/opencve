@@ -75,7 +75,7 @@ class User(BaseModel, AbstractUser):
                 vendor_id=F("products__vendor__id"),
                 vendor_name=F("products__vendor__name"),
                 product_id=F("products__id"),
-                product_name=F("products__name")
+                product_name=F("products__name"),
             )
         )
         if len(products) == 1 and set(products[0].values()) == {None}:

@@ -217,5 +217,5 @@ def is_new_cve(events):
 def is_active_link(context, *args):
     url_name = context["request"].resolver_match.url_name
     if url_name in args:
-        return 'active'
-    return ''
+        return "active"
+    return ""

@@ -6,8 +6,7 @@ import django.contrib.postgres.indexes
 import django.db.models.deletion
 import django.db.models.functions.text
 import django.utils.timezone
-from django.contrib.postgres.operations import (BtreeGinExtension,
-                                                TrigramExtension)
+from django.contrib.postgres.operations import BtreeGinExtension, TrigramExtension
 from django.db import migrations, models
 
 
