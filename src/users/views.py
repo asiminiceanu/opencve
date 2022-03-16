@@ -4,6 +4,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetView,
 )
+from django.views.generic import TemplateView
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
@@ -11,6 +12,20 @@ from django.urls import reverse_lazy
 from core.models import Product, Vendor
 from users.forms import LoginForm, PasswordResetForm, RegisterForm, SetPasswordForm
 from users.utils import is_valid_uuid
+
+
+def account(request):
+    return redirect("subscriptions")
+
+
+class SubscriptionsView(TemplateView):
+    template_name = "users/profile/subscriptions.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["vendors"] = self.request.user.get_raw_vendors()
+        context["products"] = self.request.user.get_raw_products()
+        return context
 
 
 class CustomLoginView(LoginView):
@@ -63,7 +78,7 @@ def register(request):
     )
 
 
-def subscriptions(request):
+def subscribe(request):
     response = {}
 
     # Only authenticated users can subscribe

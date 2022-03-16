@@ -1,3 +1,4 @@
+from ast import arg
 import hashlib
 
 from django import template
@@ -212,3 +213,11 @@ def event_excerpt(details):
 @register.filter
 def is_new_cve(events):
     return len(events) == 1 and events[0].type == "new_cve"
+
+
+@register.simple_tag(takes_context=True)
+def is_active_link(context, *args):
+    url_name = context["request"].resolver_match.url_name
+    if url_name in args:
+        return 'active'
+    return ''

@@ -38,20 +38,6 @@ class ChangeListView(ListView):
     paginator_class = ActivityPaginator
     form_class = ActivitiesViewForm
 
-    def _get_user_vendors(self):
-        return [v.name for v in self.request.user.vendors.all()]
-
-    def _get_user_products(self):
-        products = list(
-            User.objects.filter(id=self.request.user.id)
-            .select_related("products")
-            .select_related("vendors")
-            .values_list("products__vendor__name", "products__name")
-        )
-        if len(products) == 1 and products[0] == (None, None):
-            return []
-        return products
-
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect("cves")
@@ -63,11 +49,11 @@ class ChangeListView(ListView):
 
         # Filter on user subscriptions
         if self.request.user.settings["activities_view"] == "subscriptions":
-            vendors = self._get_user_vendors()
+            vendors = [v["vendor_name"] for v in self.request.user.get_raw_vendors()]
             vendors.extend(
                 [
-                    f"{product[0]}{PRODUCT_SEPARATOR}{product[1]}"
-                    for product in self._get_user_products()
+                    f"{product['vendor_name']}{PRODUCT_SEPARATOR}{product['product_name']}"
+                    for product in self.request.user.get_raw_products()
                 ]
             )
 
@@ -79,9 +65,9 @@ class ChangeListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Add the user subscriptions (TODO: refactor with previous same query)
-        context["vendors"] = self._get_user_vendors()
-        context["products"] = self._get_user_products()
+        # Add the user subscriptions
+        context["vendors"] = self.request.user.get_raw_vendors()
+        context["products"] = self.request.user.get_raw_products()
 
         # Add the view form
         view = self.request.user.settings["activities_view"]

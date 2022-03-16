@@ -155,7 +155,7 @@
                         {% if vendors %}
                         <h5><strong>Vendors <span>({{ vendors|length }})</span></strong></h5>
                         {% for vendor in vendors %}
-                        <a class="label label-primary" href="{% url 'cves' %}?vendor={{ vendor }}">{{ vendor| humanize }}</a>
+                        <a class="label label-primary" href="{% url 'cves' %}?vendor={{ vendor.vendor_name }}">{{ vendor.vendor_name| humanize }}</a>
                         {% endfor %}
 
                         {% if products %}
@@ -166,7 +166,7 @@
                         <h5><strong>Products <span>({{ products|length }})</span></strong></h5>
                         {% for product in products %}
                         <a class="label label-primary"
-                        href="{% url 'cves' %}?vendor={{ product.0 }}&product={{ product.1 }}">{{ product.1 | humanize }}</a>
+                        href="{% url 'cves' %}?vendor={{ product.vendor_name }}&product={{ product.product_name }}">{{ product.product_name | humanize }}</a>
                         {% endfor %}
                         {% endif %}
                     {% else %}

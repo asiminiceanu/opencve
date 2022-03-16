@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% load opencve_extras %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="profile-picture"
+             style="background-image:url('{% static 'img/deep-green.jpg' %}')">
+            <img src="{{ user.email | gravatar_url:88 }}" class="thumb-lg img-circle img-thumbnail"
+                 alt="profile-image">
+            <h3>{{ user.username }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nav-tabs-custom nav-tabs-profile nav-tabs-primary">
+            <ul class="nav nav-tabs">
+                <li class="{% is_active_link 'subscriptions' %}">
+                    <a href="{% url 'subscriptions' %}">Subscriptions</a>
+                </li>
+                <li class="">
+                    <a href="#">Tags</a>
+                </li>
+                <li class="">
+                    <a href="#">Notifications</a>
+                </li>
+                <li class="#">
+                    <a href="#">Settings</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            {% block content_profile %}{% endblock %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
