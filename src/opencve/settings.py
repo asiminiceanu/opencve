@@ -150,7 +150,8 @@ CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # Redirection page for authentication
 LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "cves"
+LOGIN_URL = "login"
 
 # Custom User model
 AUTH_USER_MODEL = "users.User"

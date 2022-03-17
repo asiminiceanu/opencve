@@ -1,16 +1,19 @@
+from hashlib import new
 import itertools
 import json
 import operator
 
 from django.core.paginator import Paginator
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.db.models import F, Q
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView, ListView
 
 from changes.models import Event
 from core.constants import PRODUCT_SEPARATOR
 from core.models import Cve, Cwe, Product, Vendor
 from core.utils import convert_cpes, get_cwes_details
+from users.models import CveTag, UserTag
 
 
 class CweListView(ListView):
@@ -121,6 +124,12 @@ class CveListView(ListView):
                     vendors__contains=f"{vendor.name}{PRODUCT_SEPARATOR}{product.name}"
                 )
 
+        # Filter by tag
+        tag = self.request.GET.get("tag", "").lower()
+        if tag and self.request.user.is_authenticated:
+            tag = get_object_or_404(UserTag, name=tag, user=self.request.user)
+            query = query.filter(cve_tags__tags__contains=tag.name)
+
         return query
 
     def get_context_data(self, **kwargs):
@@ -134,6 +143,12 @@ class CveListView(ListView):
                 context["product"] = Product.objects.get(
                     name=product, vendor=context["vendor"]
                 )
+
+        # List the user tags
+        if self.request.user.is_authenticated:
+            context["user_tags"] = [
+                t.name for t in UserTag.objects.filter(user=self.request.user).all()
+            ]
 
         return context
 
@@ -164,4 +179,48 @@ class CveDetailView(DetailView):
                 "description"
             ]
         )
+
+        # Get the CVE tags for the authenticated user
+        user_tags = {}
+        tags = []
+
+        user = self.request.user
+        if user.is_authenticated:
+            user_tags = {
+                t.name: {"name": t.name, "color": t.color, "description": t.description}
+                for t in UserTag.objects.filter(user=self.request.user).all()
+            }
+            cve_tags = CveTag.objects.filter(
+                user=self.request.user, cve=context["cve"]
+            ).first()
+            if cve_tags:
+                tags = [user_tags[cve_tag] for cve_tag in cve_tags.tags]
+
+                # We have to pass an encoded list of tags for the modal box
+                context["cve_tags_encoded"] = json.dumps(cve_tags.tags)
+
+        context["user_tags"] = user_tags.keys()
+        context["tags"] = tags
         return context
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise Http404()
+
+        cve = self.get_object()
+        new_tags = request.POST.getlist("tags", [])
+
+        # Check if all tags are declared by the user
+        user_tags = [t.name for t in UserTag.objects.filter(user=request.user).all()]
+        for new_tag in new_tags:
+            if new_tag not in user_tags:
+                raise Http404()
+
+        # Update the CVE tags
+        cve_tag = CveTag.objects.filter(user=request.user, cve_id=cve.id).first()
+        if not cve_tag:
+            cve_tag = CveTag(user=request.user, cve_id=cve.id)
+        cve_tag.tags = new_tags
+        cve_tag.save()
+
+        return redirect("cve", cve_id=cve.cve_id)

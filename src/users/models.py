@@ -1,12 +1,10 @@
-import imp
-from multiprocessing.spawn import old_main_modules
-from re import I
-
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.indexes import GinIndex
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import F
 
-from core.models import BaseModel, Product, Vendor
+from core.models import BaseModel, Cve, Product, Vendor
 
 
 def get_default_filters():
@@ -29,9 +27,6 @@ def get_default_settings():
 
 
 class User(BaseModel, AbstractUser):
-    class Meta:
-        db_table = "opencve_users"
-
     class FrequencyNotification(models.TextChoices):
         ONCE = "once", "Once a day"
         ALWAYS = "always", "As soon as a change is detected"
@@ -47,6 +42,9 @@ class User(BaseModel, AbstractUser):
 
     vendors = models.ManyToManyField(Vendor)
     products = models.ManyToManyField(Product)
+
+    class Meta:
+        db_table = "opencve_users"
 
     def __str__(self):
         return self.username
@@ -82,3 +80,54 @@ class User(BaseModel, AbstractUser):
             return []
 
         return products
+
+
+class UserTag(BaseModel):
+    name = models.CharField(
+        max_length=64,
+        validators=[
+            RegexValidator(
+                regex="^[a-zA-Z0-9\-_]+$",
+                message="Only alphanumeric, dash and underscore characters are accepted",
+            ),
+        ],
+    )
+    color = models.CharField(
+        max_length=7,
+        validators=[
+            RegexValidator(
+                regex="^#[0-9a-fA-F]{6}$",
+                message="Color must be in hexadecimal format",
+            ),
+        ],
+        default="#000000",
+    )
+    description = models.CharField(max_length=512, null=True, blank=True)
+
+    # Relationships
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tags")
+
+    class Meta:
+        db_table = "opencve_users_tags"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "user_id"], name="ix_unique_name_userid"
+            )
+        ]
+
+    def __str__(self):
+        return self.name
+
+
+class CveTag(BaseModel):
+    tags = models.JSONField()
+
+    # Relationships
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cve_tags")
+    cve = models.ForeignKey(Cve, on_delete=models.CASCADE, related_name="cve_tags")
+
+    class Meta:
+        db_table = "opencve_cves_tags"
+        indexes = [
+            GinIndex(name="ix_cves_tags", fields=["tags"]),
+        ]

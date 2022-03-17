@@ -276,9 +276,16 @@ pre.plainJSON{
   padding-bottom: 10px;
 }
 
+.tags-list a {
+  line-height: 25px;
+  font-weight: 600;
+  font-size: 85%;
+}
+
 .label-tag {
-  font-size: 80%;
   color: #fff;
+  font-size: 85%;
+  font-weight: 600;
 }
 
 .row-selected {

@@ -114,13 +114,12 @@ Vulnerabilities (CVE)
                                     {% if user.is_authenticated %}
                                     <select class="form-control select2" name="tag" data-placeholder="Select a tag">
                                         <option></option>
+                                        {% for t in user_tags %}
+                                        <option {% if request.GET.tag|lower == t %} selected="selected" {% endif %} value="{{ t }}">{{ t }}</option>
+                                        {% endfor %}
                                     </select>
                                     {% else %}
-                                    <div
-                                        data-toggle="tooltip"
-                                        data-container="body"
-                                        title="You must be signed in to filter the list of CVE by tag"
-                                    >
+                                    <div data-toggle="tooltip" data-container="body" title="You must be signed in to filter the list of CVE by tag">
                                         <select class="form-control select2" data-placeholder="Select a tag" disabled></select>
                                     </div>
                                     {% endif %}

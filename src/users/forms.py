@@ -1,5 +1,6 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Layout, Submit, Button, Div, Field, HTML
+from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.contrib.auth.forms import (
     AuthenticationForm,
@@ -8,7 +9,7 @@ from django.contrib.auth.forms import (
     UserCreationForm,
 )
 
-from users.models import User
+from users.models import User, UserTag
 
 
 class LoginForm(AuthenticationForm):
@@ -103,4 +104,39 @@ class SetPasswordForm(SetPasswordForm):
             "new_password1",
             "new_password2",
             Submit("submit", "Reset Password", css_class="btn-block btn-flat"),
+        )
+
+
+class UserTagForm(forms.ModelForm):
+    class Meta:
+        model = UserTag
+        fields = ["name", "description", "color"]
+
+    def __init__(self, user=None, *args, **kwargs):
+        super(UserTagForm, self).__init__(*args, **kwargs)
+        self.user = user
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            "name",
+            "description",
+            Div(
+                Field("color", css_class="colorpicker"),
+                Button(
+                    "generate",
+                    "Gen",
+                    css_class="btn btn-default btn-flat",
+                    css_id="genNew",
+                ),
+                HTML(
+                    """<span class="label label-tag preview-tag" style="color: #fff; background-color: {{form.color.value}};">preview</span>"""
+                ),
+                css_class="form-inline form-group",
+            ),
+            FormActions(
+                HTML(
+                    """<a href="{% url 'tags' %}" class="btn btn-default">Cancel</a> """
+                ),
+                Submit("save", "Save"),
+                css_class="pull-right",
+            ),
         )

@@ -165,14 +165,29 @@
                         {% if products %}
                         <h5><strong>Products <span>({{ products|length }})</span></strong></h5>
                         {% for product in products %}
-                        <a class="label label-primary"
-                        href="{% url 'cves' %}?vendor={{ product.vendor_name }}&product={{ product.product_name }}">{{ product.product_name | humanize }}</a>
+                        <a class="label label-primary" href="{% url 'cves' %}?vendor={{ product.vendor_name }}&product={{ product.product_name }}">{{ product.product_name | humanize }}</a>
                         {% endfor %}
                         {% endif %}
                     {% else %}
                     <p><i>You don't have any subscriptions yet, explore the list of <a href="{% url 'vendors' %}">Vendors & Products</a> to select some.</i></p>
                     {% endif %}
                 </div>
+            </div>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tags</h3>
+                    <div class="box-tools pull-right">
+                        <a class="btn btn-box-tool" href="{% url 'tags' %}" data-toggle="tooltip" data-container="body" data-placement="left" title="Manage your tags"><i class="fa fa-gears"></i></a>
+                    </div>
+                </div>
+                {% if tags %}
+                <div class="box-body tags-list">
+                    {% for tag in tags %}
+                    <a class="label" href="{% url 'cves' %}?tag={{ tag.name }}" style="background-color: {{ tag.color }};" data-toggle="tooltip" data-container="body" title="{{ tag.description }}">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

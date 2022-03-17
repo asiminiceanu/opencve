@@ -86,7 +86,6 @@ class Product(BaseModel):
 
 
 class Cve(BaseModel):
-    # TODO: check if updated_at needs to be indexed
     cve_id = models.CharField(max_length=20, unique=True)
     json = models.JSONField()
     vendors = models.JSONField()
@@ -111,13 +110,10 @@ class Cve(BaseModel):
             GinIndex(
                 OpClass(Upper("cve_id"), name="gin_trgm_ops"),
                 name="ix_cves_cve_id",
-            )
-            # GinIndex(name='ix_cves_summary', fields=['summary'], opclasses=['gin_trgm_ops']),
-            # GinIndex(name='ix_cves_cve_id', fields=['cve_id'], opclasses=['gin_trgm_ops']),
+            ),
         ]
 
     @property
-    # from django.contrib.postgres.operations import TrigramExtension, BtreeGinExtension
     def cvss_weight(self):
         """Only used to sort several CVE by their CVSS"""
         w = 0

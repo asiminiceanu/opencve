@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import redirect
@@ -25,7 +26,7 @@ class ActivityPaginator(Paginator):
         return 9999999999
 
 
-class ChangeListView(ListView):
+class ChangeListView(LoginRequiredMixin, ListView):
     model = Change
     context_object_name = "changes"
     template_name = "changes/change_list.html"
@@ -63,6 +64,9 @@ class ChangeListView(ListView):
         # Add the user subscriptions
         context["vendors"] = self.request.user.get_raw_vendors()
         context["products"] = self.request.user.get_raw_products()
+
+        # Add the user tags
+        context["tags"] = self.request.user.tags.all()
 
         # Add the view form
         view = self.request.user.settings["activities_view"]

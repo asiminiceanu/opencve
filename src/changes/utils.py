@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class CveUtil(object):
     @classmethod
     def cve_has_changed(cls, cve_db, cve_json):
-        return arrow.get(cve_json["lastModifiedDate"]) != cve_db.updated_at
+        return arrow.get(cve_json["lastModifiedDate"]).datetime != cve_db.updated_at
 
     @classmethod
     def prepare_event(cls, cve_obj, cve_json, type, payload={}):
@@ -43,7 +43,6 @@ class CveUtil(object):
             event.change = change
             event.save()
 
-        logger.info(f"Change {change.id} created with {len(events)} event(s)")
         return change
 
     @classmethod

@@ -50,13 +50,11 @@ def check_for_update(cve_json, task):
     # A new CVE has been added
     if not cve_obj:
         cve_obj = CveUtil.create_cve(cve_json)
-        logger.info("{} created (ID: {})".format(cve_id, cve_obj.id))
+        logger.info(f"[{cve_id}] New CVE")
         events = [CveUtil.prepare_event(cve_obj, cve_json, "new_cve", {})]
 
     # Existing CVE has changed
     elif CveUtil.cve_has_changed(cve_obj, cve_json):
-        logger.info("{} has changed, parsing it...".format(cve_obj.cve_id))
-
         events = []
         checks = BaseCheck.__subclasses__()
 
@@ -76,6 +74,7 @@ def check_for_update(cve_json, task):
     # Create the change
     if events:
         CveUtil.create_change(cve_obj, cve_json, task, events)
+        logger.info(f"[{cve_obj.cve_id}] CVE has changed ({len(events)} events)")
 
 
 @shared_task(name="HANDLE_EVENTS")
