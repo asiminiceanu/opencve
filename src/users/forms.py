@@ -87,9 +87,9 @@ class ProfileChangeForm(forms.ModelForm):
         super(ProfileChangeForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            'first_name',
-            'last_name',
-            'email',
+            "first_name",
+            "last_name",
+            "email",
             Submit("submit", "Change Password", css_class="btn btn-primary"),
         )
 
@@ -99,9 +99,9 @@ class PasswordChangeForm(PasswordChangeForm):
         super(PasswordChangeForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            'old_password',
-            'new_password1',
-            'new_password2',
+            "old_password",
+            "new_password1",
+            "new_password2",
             Submit("submit", "Change Password", css_class="btn btn-primary"),
         )
 

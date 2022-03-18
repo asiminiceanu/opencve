@@ -45,16 +45,16 @@ class SettingsProfileView(LoginRequiredMixin, UpdateView):
     model = User
     fields = ["first_name", "last_name", "email"]
     template_name = "users/account/settings_profile.html"
-    success_url = reverse_lazy('settings_profile')
+    success_url = reverse_lazy("settings_profile")
 
     def get_object(self, queryset=None):
         return self.request.user
 
     def get_form(self, form_class=None):
-       form = super().get_form(form_class)
-       form.helper = FormHelper()
-       form.helper.add_input(Submit('submit', 'Update', css_class='btn-primary'))
-       return form
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        form.helper.add_input(Submit("submit", "Update", css_class="btn-primary"))
+        return form
 
     def form_valid(self, form):
         resp = super().form_valid(form)
@@ -68,7 +68,7 @@ class SettingsProfileView(LoginRequiredMixin, UpdateView):
 class SettingsPasswordView(PasswordChangeView):
     form_class = PasswordChangeForm
     template_name = "users/account/settings_password.html"
-    success_url = reverse_lazy('settings_password')
+    success_url = reverse_lazy("settings_password")
 
     def form_valid(self, form):
         resp = super().form_valid(form)

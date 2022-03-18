@@ -15,10 +15,8 @@ from users.views import (
 
 urlpatterns = [
     path("", account, name="account"),
-
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('logout/', views.LogoutView.as_view(), name='logout'),
-
+    path("login/", views.LoginView.as_view(), name="login"),
+    path("logout/", views.LogoutView.as_view(), name="logout"),
     path("password/", SettingsPasswordView.as_view(), name="settings_password"),
     path("password_reset/", CustomPasswordResetView.as_view(), name="password_reset"),
     path("profile/", SettingsProfileView.as_view(), name="settings_profile"),
