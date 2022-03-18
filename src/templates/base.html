@@ -92,7 +92,6 @@
                     <ul class="sidebar-menu" data-widget="tree">
                         {% if user.is_authenticated %}
                         <li class="{% is_active_link 'home' %}"><a href="{% url 'home' %}"><i class="fa fa-home"></i><span>Dashboard</span></a></li>
-                        <li><a href="#"><i class="fa fa-list-alt"></i> <span>Reports</span></a></li>
                         {% endif %}
                         <li class="{% is_active_link 'cves' 'cve' 'change' %}"><a href="{% url 'cves' %}"><i class="fa fa-shield"></i> <span>Vulnerabilities (CVE)</span></a></li>
                         <li class="{% is_active_link 'vendors' %}"><a href="{% url 'vendors' %}"><i class="fa fa-tags"></i> <span> Vendors & Products (CPE)</span></a></li>
