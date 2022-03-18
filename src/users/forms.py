@@ -4,6 +4,7 @@ from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.contrib.auth.forms import (
     AuthenticationForm,
+    PasswordChangeForm,
     PasswordResetForm,
     SetPasswordForm,
     UserCreationForm,
@@ -75,6 +76,34 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class ProfileChangeForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileChangeForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            'first_name',
+            'last_name',
+            'email',
+            Submit("submit", "Change Password", css_class="btn btn-primary"),
+        )
+
+
+class PasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            'old_password',
+            'new_password1',
+            'new_password2',
+            Submit("submit", "Change Password", css_class="btn btn-primary"),
+        )
 
 
 class PasswordResetForm(PasswordResetForm):

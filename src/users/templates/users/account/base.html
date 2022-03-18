@@ -28,8 +28,8 @@
                 <li class="">
                     <a href="#">Notifications</a>
                 </li>
-                <li class="#">
-                    <a href="#">Settings</a>
+                <li class="{% is_active_link 'settings_profile' 'settings_password' %}">
+                    <a href="{% url 'settings_profile' %}">Settings</a>
                 </li>
             </ul>
         </div>
@@ -47,7 +47,7 @@
                 </div>
                 {% endfor %}
             {% endif %}
-            {% block content_profile %}{% endblock %}
+            {% block content_account %}{% endblock %}
         </div>
     </div>
 </section>

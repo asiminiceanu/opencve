@@ -1,7 +1,9 @@
-from tkinter import E
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django.contrib import messages
 from django.contrib.auth.views import (
     LoginView,
+    PasswordChangeView,
     PasswordResetConfirmView,
     PasswordResetView,
 )
@@ -9,17 +11,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, TemplateView, DeleteView
+from django.views.generic import ListView, TemplateView, DeleteView, UpdateView
 
 from core.models import Product, Vendor
 from users.forms import (
     LoginForm,
+    PasswordChangeForm,
     PasswordResetForm,
+    ProfileChangeForm,
     RegisterForm,
     SetPasswordForm,
     UserTagForm,
 )
-from users.models import CveTag, UserTag
+from users.models import CveTag, UserTag, User
 from users.utils import is_valid_uuid
 
 
@@ -28,7 +32,7 @@ def account(request):
 
 
 class SubscriptionsView(LoginRequiredMixin, TemplateView):
-    template_name = "users/profile/subscriptions.html"
+    template_name = "users/account/subscriptions.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,9 +41,47 @@ class SubscriptionsView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class SettingsProfileView(LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ["first_name", "last_name", "email"]
+    template_name = "users/account/settings_profile.html"
+    success_url = reverse_lazy('settings_profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_form(self, form_class=None):
+       form = super().get_form(form_class)
+       form.helper = FormHelper()
+       form.helper.add_input(Submit('submit', 'Update', css_class='btn-primary'))
+       return form
+
+    def form_valid(self, form):
+        resp = super().form_valid(form)
+        messages.success(
+            self.request,
+            f"Your profile has been updated.",
+        )
+        return resp
+
+
+class SettingsPasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name = "users/account/settings_password.html"
+    success_url = reverse_lazy('settings_password')
+
+    def form_valid(self, form):
+        resp = super().form_valid(form)
+        messages.success(
+            self.request,
+            f"Your password has been updated.",
+        )
+        return resp
+
+
 class TagsView(LoginRequiredMixin, ListView):
     context_object_name = "tags"
-    template_name = "users/profile/tags.html"
+    template_name = "users/account/tags.html"
 
     def get_queryset(self):
         query = UserTag.objects.filter(user=self.request.user).all()
@@ -104,7 +146,7 @@ class TagDeleteView(LoginRequiredMixin, DeleteView):
     model = UserTag
     slug_field = "name"
     slug_url_kwarg = "name"
-    template_name = "users/profile/delete_tag.html"
+    template_name = "users/account/delete_tag.html"
 
     def get_success_url(self):
         obj = self.get_object()
